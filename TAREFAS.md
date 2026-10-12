@@ -16,6 +16,7 @@
 | **Membro 3** | Desenvolvedor Backend & Regras | `TB_EVOLUCAO` + Trava de Integridade | `controller_evolucao.py` e lógica de FK na exclusão (item 6.c.5.i) |
 | **Membro 4** | Especialista em SQL & Backend | `TB_TREINADOR` + Módulo de Relatórios | `controller_treinador.py`, `relatorios.py` (GROUP BY e JOINs) |
 | **Membro 5** | Líder de Integração & QA | Menu Principal + README & Vídeo | `principal.py`, `config.py`, README Linux e Vídeo no YouTube |
+| **Membro 6** | Desenvolvedor Backend & Regras | `TB_BATALHA` + Validações Cruzadas | `controller_batalha.py`, `model/batalha.py` e testes de integridade |
 
 ---
 
@@ -138,6 +139,24 @@
 
 ---
 
+### 👤 Membro 6: Desenvolvedor Backend (Entidade: Batalha) & Validações Cruzadas
+**Foco:** Entidade de histórico de combate (`TB_BATALHA`), integridade de múltiplas chaves estrangeiras e testes de fluxo.
+
+#### Tarefas:
+1. **Model de Batalha (`src/model/batalha.py`)**:
+   - Atributos: `a definir`.
+   -- CRUD completo (inserir, listar, atualizar e excluir).
+2. **Controller de Batalha (`src/controller/controller_batalha.py`)**:
+   - `inserir_batalha()`: lista os treinadores cadastrados, valida se o desafiante e o desafiado são distintos (`treinador_1 != treinador_2`), define vencedor e grava com transação no banco.
+   - `atualizar_batalha()`: permite ajustar local, data ou vencedor caso haja empate/revisão.
+   - `excluir_batalha()`: remove o registro com confirmação do usuário.
+   - `verifica_existencia()`: checagem de existência por ID.
+3. **Validação de Integridade Referencial Mútua**:
+   - Garantir que a tabela `TB_TREINADOR` não possa ser excluída sem aviso caso o treinador participe de uma batalha (trava de FK complementar ao trabalho do Membro 3).
+4. **Testes de Integração e Carga**:
+   - Executar bateria de testes manuais registrando batalhas e verificando as contagens dinâmicas no `splash_screen.py`.
+
+---
 
 
 

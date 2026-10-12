@@ -89,3 +89,16 @@
   3. `diagrama_geral_completo.png` (ou `.pdf`).
   4. Revisão e montagem dos scripts finais unificados: `sql/create_tables.sql` e `sql/drop_tables.sql`.
 * **Branch Git:** `primeiro-passo-tabelas-e-diagrama-membro-5`
+
+---
+
+## 👤 Membro 6 — Tabela `TB_BATALHA` e Diagrama
+
+* **Tabela:** `TB_BATALHA`
+* **Colunas a especificar:** `ID_BATALHA`, `ID_TREINADOR_1` ... outros que achar necessário.
+* **Entregáveis na pasta `diagramas/membro_6/` (ou com seu nome):**
+  1. `diagrama_batalha.mmd` (código Mermaid mostrando `TB_BATALHA` e as conexões FK com `TB_TREINADOR`).
+  2. `diagrama_batalha.png` (ou `.pdf`).
+  3. `tb_batalha.sql` (comando `CREATE TABLE` com constraints de PK e FKs, e 3 inserts de batalhas de teste).
+  4. Mapeamento(anotação em texto) de regra de exclusão: trava para impedir exclusão de Treinador que tenha histórico em `TB_BATALHA`.
+* **Branch Git:** `primeiro-passo-tabelas-e-diagrama-membro-6`
