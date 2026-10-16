@@ -1,6 +1,6 @@
 # 🚀 Passo 1: Definição de Tabelas e Diagramas (Guia Rápido por Membro)
 
-> **Objetivo:** Definir as 4 tabelas da Pokédex, criar os diagramas em formato Mermaid (`.mmd`) e imagens, e gerar os trechos SQL individuais.  
+> **Objetivo:** Definir as tabelas da Pokédex, criar os diagramas em formato Mermaid (`.mmd`) e imagens, e gerar os trechos SQL individuais.  
 > **Padrão de Branch no Git:** `primeiro-passo-tabelas-e-diagrama-membro-X`  
 > **Local dos Entregáveis:** Criar uma pasta com o seu nome dentro de `diagramas/` (ex: `diagramas/nome_do_membro/`).
 
@@ -29,15 +29,19 @@
 
 ---
 
-## 👤 Membro 1 — Tabela `TB_REGIAO` e Diagrama
+## 👤 Membro 1 — Tabelas `TB_REGIAO` e `TB_LOCALIZACAO`
 
 * **Tabela:** `TB_REGIAO`
 * **Colunas a especificar:** `ID_REGIAO` (PK),...outros que achar necessario.
+* **Tabela:** `TB_LOCALIZACAO`
+* **Colunas a especificar:** `ID_LOCALIZACAO` (PK), `ID_REGIAO` (FK para `TB_REGIAO`), `NOME_LOCALIZACAO` e outros atributos que achar necessario.
+* Cada localização deve pertencer a uma região, e um Pokémon deverá ser vinculado a uma localização, não diretamente a uma região.
 * **Entregáveis na pasta `diagramas/membro_1/` (ou com seu nome):**
-  1. `diagrama_regiao.mmd` (código Mermaid do modelo da região).
-  2. `diagrama_regiao.png` (ou `.pdf`).
+  1. `diagrama_regiao_localizacao.mmd` (código Mermaid dos modelos de região e localização, incluindo o relacionamento entre eles).
+  2. `diagrama_regiao_localizacao.png` (ou `.pdf`).
   3. `tb_regiao.sql` (comando de criação e 3 inserts de exemplo: Kanto, Johto, Hoenn).
-  4. Suporte ao diagrama relacional global no SQL Power Architect.
+  4. `tb_localizacao.sql` (comando de criação com a FK para `TB_REGIAO` e inserts de locais de exemplo).
+  5. Suporte ao diagrama relacional global no SQL Power Architect.
 * **Branch Git:** `primeiro-passo-tabelas-e-diagrama-membro-1`
 
 ---
@@ -45,9 +49,9 @@
 ## 👤 Membro 2 — Tabela `TB_POKEMON` e Diagrama
 
 * **Tabela:** `TB_POKEMON`
-* **Colunas a especificar:** `ID_POKEMON` (PK), `ID_REGIAO` (FK para `TB_REGIAO`) ... outros que achar necessario.
+* **Colunas a especificar:** `ID_POKEMON` (PK), `ID_LOCALIZACAO` (FK para `TB_LOCALIZACAO`) ... outros que achar necessario.
 * **Entregáveis na pasta `diagramas/membro_2/` (ou com seu nome):**
-  1. `diagrama_pokemon.mmd` (código Mermaid mostrando `TB_POKEMON` e a FK para `TB_REGIAO`).
+  1. `diagrama_pokemon.mmd` (código Mermaid mostrando `TB_POKEMON` e a FK para `TB_LOCALIZACAO`).
   2. `diagrama_pokemon.png` (ou `.pdf`).
   3. `tb_pokemon.sql` (comando de criação com a constraint(restrições) FK e 6 inserts de Pokémons clássicos).
 * **Branch Git:** `primeiro-passo-tabelas-e-diagrama-membro-2`
@@ -85,7 +89,7 @@
 * **Papel:** Líder de Integração do Banco e Repositório.
 * **Entregáveis na pasta `diagramas/membro_5/` (ou com seu nome):**
   1. `padroes_banco.md` (regras aprovadas: nomes das colunas, tipos e SGBD escolhido).
-  2. `diagrama_geral_completo.mmd` (Mermaid com as 4 tabelas unificadas e seus relacionamentos).
+  2. `diagrama_geral_completo.mmd` (Mermaid com todas as tabelas definidas e seus relacionamentos).
   3. `diagrama_geral_completo.png` (ou `.pdf`).
   4. Revisão e montagem dos scripts finais unificados: `sql/create_tables.sql` e `sql/drop_tables.sql`.
 * **Branch Git:** `primeiro-passo-tabelas-e-diagrama-membro-5`
