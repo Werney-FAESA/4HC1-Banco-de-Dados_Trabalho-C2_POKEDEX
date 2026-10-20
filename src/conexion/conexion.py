@@ -1,15 +1,17 @@
 import psycopg2
 from psycopg2 import OperationalError, DatabaseError, IntegrityError
 import pandas as pd
+import os
+
 
 class PostgresQueries:
     def __init__(self, can_write: bool = False):
         self.can_write = can_write
-        self.host = "localhost"
-        self.port = "5432"
-        self.database = "pokedex"
-        self.user = "postgres"
-        self.password = "password123"
+        self.host = os.getenv("POSTGRES_HOST", "localhost")
+        self.port = os.getenv("POSTGRES_PORT", "5432")
+        self.database = os.getenv("POSTGRES_DB", "pokedex")
+        self.user = os.getenv("POSTGRES_USER", "postgres")
+        self.password = os.getenv("POSTGRES_PASSWORD", "password123")
         self.conn = None
         self.cur = None
 
@@ -33,11 +35,11 @@ class PostgresQueries:
             print(f"\n[ERRO INESPERADO] Falha ao abrir conexão: {e}")
             raise
 
-    def sqlToDataFrame(self, query: str) -> pd.DataFrame:
+    def sqlToDataFrame(self, query: str, params=None) -> pd.DataFrame:
         """Executa comandos SELECT e retorna um DataFrame do Pandas."""
         try:
             self.connect()
-            self.cur.execute(query)
+            self.cur.execute(query, params)
             rows = self.cur.fetchall()
             columns = [desc[0].lower() for desc in self.cur.description]
             return pd.DataFrame(rows, columns=columns)
@@ -47,14 +49,14 @@ class PostgresQueries:
         finally:
             self.close()
 
-    def write(self, query: str):
+    def write(self, query: str, params=None):
         """Executa comandos INSERT, UPDATE e DELETE sem ORM com tratamento de transação."""
         if not self.can_write:
             raise PermissionError("[PERMISSÃO] Esta instância de conexão foi aberta apenas para leitura.")
         
         try:
             self.connect()
-            self.cur.execute(query)
+            self.cur.execute(query, params)
             self.conn.commit()
         except IntegrityError as e:
             if self.conn:
@@ -92,3 +94,6 @@ class PostgresQueries:
                 self.conn.close()
         except Exception as e:
             print(f"[AVISO] Erro ao fechar conexão: {e}")
+        finally:
+            self.cur = None
+            self.conn = None
