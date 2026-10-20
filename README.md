@@ -5,12 +5,38 @@
 O projeto usa `psycopg2` diretamente, sem ORM. O banco roda pelo Docker Compose e
 fica disponivel em `localhost:5432`.
 
-### Preparar e testar
+### Preparar o ambiente
 
 ```bash
-docker compose up -d
-python3 -m pip install -r requeriments.txt
-python3 -c "from src.conexion.conexion import PostgresQueries; print(PostgresQueries().sqlToDataFrame('SELECT 1 AS conectado'))"
+python3 -m venv venv
+source venv/bin/activate
+python -m pip install -r requeriments.txt
+sudo docker compose up -d
+sudo docker compose ps
+```
+
+O servico `db` deve aparecer como `running` ou `Up`. O comando `sudo` e necessario
+neste ambiente para acessar a API do Docker.
+
+### Validar a conexao
+
+Execute uma consulta minima usando a classe da aplicacao:
+
+```bash
+python -c "from src.conexion.conexion import PostgresQueries; resultado = PostgresQueries().sqlToDataFrame('SELECT 1 AS conectado'); print(resultado.to_string(index=False))"
+```
+
+O resultado esperado e:
+
+```text
+ conectado
+	 1
+```
+
+Para testar uma tabela do banco, execute:
+
+```bash
+python -c "from src.conexion.conexion import PostgresQueries; print(PostgresQueries().sqlToDataFrame('SELECT * FROM pokemon LIMIT 5'))"
 ```
 
 As configuracoes podem ser sobrescritas pelas variaveis `POSTGRES_HOST`,
