@@ -12,7 +12,7 @@
 | Integrante | Papel Principal | Entidades / Módulos em Foco | Entregáveis Específicos |
 | :--- | :--- | :--- | :--- |
 | **Membro 1** | Arquiteto de BD & Backend | `TB_REGIAO` + Conexão com o BD | Diagrama Relacional, DDLs SQL e `controller_regiao.py` |
-| **Membro 2** | Desenvolvedor Backend | `TB_POKEMON` + Splash Screen | `controller_pokemon.py` e `splash_screen.py` com contagem SQL |
+| **Membro 2** | Desenvolvedor Backend | `TB_POKEMON` | `controller_pokemon.py` |
 | **Membro 3** | Desenvolvedor Backend & Regras | `TB_EVOLUCAO` + Trava de Integridade | `controller_evolucao.py` e lógica de FK na exclusão (item 6.c.5.i) |
 | **Membro 4** | Especialista em SQL & Backend | `TB_TREINADOR` + Módulo de Relatórios | `controller_treinador.py`, `relatorios.py` (GROUP BY e JOINs) |
 | **Membro 5** | Líder de Integração & QA | Menu Principal + README & Vídeo | `principal.py`, `config.py`, README Linux e Vídeo no YouTube |
@@ -60,12 +60,7 @@
    - `atualizar_pokemon()`: lista os Pokémons, escolhe por PK, atualiza dados atômicos e exibe o registro atualizado.
    - `excluir_pokemon()`: lista os Pokémons, verifica se o Pokémon é chave estrangeira em `TB_EVOLUCAO` antes de permitir excluir.
    - `verifica_existencia()`: método de consulta por ID.
-3. **Splash Screen Dinâmica (`src/utils/splash_screen.py`)**:
-   - Exibir na inicialização do programa:
-     - Nome do sistema ("POKÉDEX DATABASE SYSTEM").
-     - Nome dos 5 integrantes da equipe.
-     - Nome do professor: **Howard Roatti**, disciplina: **Banco de Dados**, semestre atual.
-     - **Contagem dinâmica via SQL**: executar `comandos para verificar as tabelas existentes e os itens` para cada uma das tabelas e exibir na tela inicial.
+
 
 ---
 
@@ -153,8 +148,7 @@
    - `verifica_existencia()`: checagem de existência por ID.
 3. **Validação de Integridade Referencial Mútua**:
    - Garantir que a tabela `TB_TREINADOR` não possa ser excluída sem aviso caso o treinador participe de uma batalha (trava de FK complementar ao trabalho do Membro 3).
-4. **Testes de Integração e Carga**:
-   - Executar bateria de testes manuais registrando batalhas e verificando as contagens dinâmicas no `splash_screen.py`.
+
 
 ---
 
