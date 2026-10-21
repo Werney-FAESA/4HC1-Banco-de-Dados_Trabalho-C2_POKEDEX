@@ -1,0 +1,32 @@
+# Ambientes virtuais e arquivos Python gerados
+venv/
+.venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Variáveis de ambiente e segredos locais
+.env
+.env.*
+!.env.example
+
+# Testes, cobertura e ferramentas de desenvolvimento
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Configurações locais de editores e sistema operacional
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs e arquivos locais de banco de dados
+*.log
+*.sqlite
+*.sqlite3
