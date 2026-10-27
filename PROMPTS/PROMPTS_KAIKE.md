@@ -22,3 +22,9 @@ faça uma análise do código, me diga se tem algo feito de forma errada e quais
 ## FONTE - COPILOT - VS CODE
 
 Preciso que você crie o arquivo .gitignore e ja adicione o que não for necessário de ser versionado
+
+# 4
+
+## FONTE - COPILOT - VS CODE
+
+Fiz a adição do controller_regiao.py e do model/regiao.py. Quero que você vasculhe o código e identifique possíveis erros, coisas faltando e me de sugestões do que alterar.
