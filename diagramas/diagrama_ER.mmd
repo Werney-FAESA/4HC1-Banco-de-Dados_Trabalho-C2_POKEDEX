@@ -1,0 +1,30 @@
+---
+title: Diagrama ER - POKEDEX
+---
+
+flowchart LR
+
+    TB_REGIAO[REGIÃO]
+    TB_POKEMON[POKEMON]
+    
+    TB_TREINADOR[TREINADOR]
+    
+
+    r1{pertence}
+    r2{pertence}
+    
+    
+
+    subgraph TB_EVOLUCAO[EVOLUÇÃO]
+        r4{evolui}
+    end
+
+    subgraph TB_BATALHA[BATALHA]
+        r3{participa}
+    end
+
+    
+    TB_TREINADOR ---|0,N| r1 ---|1| TB_REGIAO
+    TB_TREINADOR ---|0,N| r3 ---|0,N| TB_TREINADOR
+    TB_POKEMON ---|0,N| r2 ---|1| TB_REGIAO
+    TB_POKEMON ---|0,1| r4 ---|0,N| TB_POKEMON
