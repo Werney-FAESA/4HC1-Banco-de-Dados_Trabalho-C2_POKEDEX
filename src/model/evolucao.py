@@ -47,9 +47,12 @@ class Evolucao:
     def to_string(self) -> str:
         pokemon_base = self.get_pokemon_base()
         pokemon_evoluido = self.get_pokemon_evoluido()
-        nome_pokemon_base = pokemon_base.get_nome_pokemon() if pokemon_base else "N/A"
-        nome_pokemon_evoluido = pokemon_evoluido.get_nome_pokemon() if pokemon_evoluido else "N/A"
-        return f"ID Evolução: {self.get_id_evolucao()} | ID Pokémon Base: {nome_pokemon_base} | ID Pokémon Evoluído: {nome_pokemon_evoluido} | Nível Evolução: {self.get_nivel_evolucao()} | Modo Evolução: {self.get_modo_evolucao()}"
-
-                 
-
+        base = (f"{pokemon_base.get_id_pokemon()} - {pokemon_base.get_nome_pokemon()}"
+                if pokemon_base else "N/A")
+        evoluido = (f"{pokemon_evoluido.get_id_pokemon()} - {pokemon_evoluido.get_nome_pokemon()}"
+                    if pokemon_evoluido else "N/A")
+        nivel = self.get_nivel_evolucao()
+        nivel_texto = nivel if nivel is not None else "-"
+        return (f"ID Evolução: {self.get_id_evolucao()} | Pokémon Base: {base} | "
+                f"Pokémon Evoluído: {evoluido} | Nível Evolução: {nivel_texto} | "
+                f"Modo Evolução: {self.get_modo_evolucao()}")
