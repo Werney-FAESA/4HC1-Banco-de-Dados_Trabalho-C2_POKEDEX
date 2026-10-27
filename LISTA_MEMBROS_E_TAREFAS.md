@@ -3,7 +3,7 @@
 
 * Membro 1 - Kaike Vaccari do Nascimento
 * Membro 2 - Issacar Mattos Gutler
-* Membro 3 - 
+* Membro 3 - Bruno Mauro Bayer Laiber
 * Membro 4 - Daniel Lima Delantonio
 * Membro 5 - Werney Ferreira Rocha
 * Membro 6 -
