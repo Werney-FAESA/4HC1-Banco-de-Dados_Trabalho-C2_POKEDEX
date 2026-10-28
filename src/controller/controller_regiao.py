@@ -9,8 +9,8 @@ from src.model.regiao import Regiao
 class Controller_Regiao:
     TABLE_NAME = "tb_regiao"
 
-    def adicionar_regiao(self) -> Optional[Regiao]:
-        """Solicita os dados e adiciona uma região ao banco."""
+    def inserir_regiao(self) -> Optional[Regiao]:
+        """Solicita os dados e insere uma região no banco."""
         postgres = PostgresQueries(can_write=True)
         self.listar_regioes(postgres)
 
@@ -20,7 +20,7 @@ class Controller_Regiao:
             print("[ERRO] O ID deve ser um número inteiro.")
             return None
 
-        if self.verifica_existencia_regiao(postgres, id_regiao):
+        if self.verifica_existencia(postgres, id_regiao):
             print(f"\n[AVISO] O ID {id_regiao} já existe.")
             return None
 
@@ -47,9 +47,13 @@ class Controller_Regiao:
             print("[ERRO] A região foi inserida, mas não pôde ser recuperada.")
             return None
 
-        print("\n[SUCESSO] Região adicionada com sucesso:")
+        print("\n[SUCESSO] Região inserida com sucesso:")
         print(nova_regiao.to_string())
         return nova_regiao
+
+    def adicionar_regiao(self) -> Optional[Regiao]:
+        """Mantém compatibilidade com chamadas antigas."""
+        return self.inserir_regiao()
 
     def atualizar_regiao(self) -> Optional[Regiao]:
         """Lista as regiões, solicita o ID e atualiza os dados."""
@@ -62,7 +66,7 @@ class Controller_Regiao:
             print("[ERRO] O ID deve ser um número inteiro.")
             return None
 
-        if not self.verifica_existencia_regiao(postgres, id_regiao):
+        if not self.verifica_existencia(postgres, id_regiao):
             print(f"\n[AVISO] A região {id_regiao} não existe.")
             return None
 
@@ -104,14 +108,14 @@ class Controller_Regiao:
             print("[ERRO] O ID deve ser um número inteiro.")
             return
 
-        if not self.verifica_existencia_regiao(postgres, id_regiao):
+        if not self.verifica_existencia(postgres, id_regiao):
             print(f"\n[AVISO] A região {id_regiao} não existe.")
             return
 
         if self.verifica_vinculo_fk(postgres, id_regiao):
             print(
-                "\n[AVISO] Não é possível excluir a região pois ela possui "
-                "Pokémon vinculados."
+                "\n[AVISO] Não é possível excluir o registro pois ele possui "
+                "registros dependentes em outra tabela."
             )
             return
 
@@ -132,7 +136,7 @@ class Controller_Regiao:
         if regiao_excluida is not None:
             print(regiao_excluida.to_string())
 
-    def verifica_existencia_regiao(
+    def verifica_existencia(
         self, postgres: PostgresQueries, id_regiao: int
     ) -> bool:
         """Retorna True quando a região existe no banco."""
@@ -142,25 +146,37 @@ class Controller_Regiao:
         )
         return not df_regiao.empty
 
+    def verifica_existencia_regiao(
+        self, postgres: PostgresQueries, id_regiao: int
+    ) -> bool:
+        """Mantém compatibilidade com chamadas antigas do controller."""
+        return self.verifica_existencia(postgres, id_regiao)
+
     def verifica_regiao(
         self, postgres: PostgresQueries, id_regiao: int
     ) -> bool:
         """Mantém compatibilidade com chamadas antigas do controller."""
-        return self.verifica_existencia_regiao(postgres, id_regiao)
+        return self.verifica_existencia(postgres, id_regiao)
 
     def verifica_vinculo_fk(
         self, postgres: PostgresQueries, id_regiao: int
     ) -> bool:
-        """Verifica se há Pokémon vinculados à região."""
+        """Verifica se há Pokémon ou treinadores vinculados à região."""
         df_vinculos = postgres.sqlToDataFrame(
             """
-            SELECT COUNT(1) AS total
-            FROM tb_pokemon
-            WHERE id_regiao = %s
+            SELECT EXISTS (
+                SELECT 1
+                FROM tb_pokemon
+                WHERE id_regiao = %s
+            ) OR EXISTS (
+                SELECT 1
+                FROM tb_treinador
+                WHERE id_regiao = %s
+            ) AS possui_vinculos
             """,
-            (id_regiao,),
+            (id_regiao, id_regiao),
         )
-        return int(df_vinculos.iloc[0]["total"]) > 0
+        return bool(df_vinculos.iloc[0]["possui_vinculos"])
 
     def listar_regioes(
         self, postgres: Optional[PostgresQueries] = None

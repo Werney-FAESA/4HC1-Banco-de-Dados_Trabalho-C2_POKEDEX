@@ -17,13 +17,13 @@ faça uma análise do código, me diga se tem algo feito de forma errada e quais
 - Estou contribuindo para o projeto como membro_1. Estou seguindo para o passo 3. Módulo de conexão, o SGBD a ser utilizado será o Postgresql, a linguagem de programação o python e preciso saber como fazer a tarefa "Implementar a conexão com o banco de dados sem ORM, com tratamento de erros.
   ", integrando o banco de dados via Docker.
 
-#4
+# 4
 
 ## FONTE - COPILOT - VS CODE
 
 Preciso que você crie o arquivo .gitignore e ja adicione o que não for necessário de ser versionado
 
-# 4
+# 5
 
 ## FONTE - COPILOT - VS CODE
 
