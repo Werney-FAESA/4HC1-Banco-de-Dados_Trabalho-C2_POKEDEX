@@ -27,10 +27,13 @@
 ## Membro 3: (Entidade: `TB_EVOLUCAO`)
 
 ### Tarefas Faltantes
-- [ ] **Implementar `src/controller/controller_evolucao.py`**:
+- [x] **Implementar `src/controller/controller_evolucao.py`**:
   - inserção, listagem, atualização e exclusão com todas as validações necessarias.
-- [ ] **Implementar `src/sql`**:
+- [x] **Implementar `src/sql`**:
   - arquivos de relatorios (pode usar o arquivo reports/relatorios.py como referencia)
+  - `relatorio_pokemons_evolucao.sql` e `relatorio_pokemons_evolucao_ult.sql`
+- [x] **Padrão de exclusão segura (`src/utils/exclusao_segura.py`)**:
+  - Trava de FK com opção de excluir os dependentes (item 6.c.5.i). Aplicado em Pokémon; Região, Treinador e Batalha devem usar `excluir_registro_seguro()`.
 
 
 

@@ -12,6 +12,7 @@ from psycopg2 import DatabaseError, IntegrityError
 
 from conexion.conexion import PostgresQueries
 from model.pokemon import Pokemon
+from utils.exclusao_segura import excluir_registro_seguro
 
 
 class Controller_Pokemon:
@@ -233,7 +234,7 @@ class Controller_Pokemon:
         return pokemon
 
     def excluir_pokemon(self) -> bool:
-        """Exclui um Pokémon somente quando ele não possui evoluções dependentes."""
+        """Exclui um Pokémon usando o padrão de exclusão segura (trava de FK)."""
         print("\n--- Excluir Pokémon ---")
         if not self.listar_pokemons():
             return False
@@ -242,32 +243,8 @@ class Controller_Pokemon:
             print("Pokémon não encontrado.")
             return False
 
-        dependencias = self._consultar(
-            """
-            SELECT EXISTS (
-                SELECT 1
-                  FROM tb_evolucao
-                 WHERE id_pokemon_base = %s OR id_pokemon_evoluido = %s
-            ) AS possui_dependencias
-            """,
-            (id_pokemon, id_pokemon),
-        )
-        if not dependencias.empty and bool(dependencias.iloc[0]["possui_dependencias"]):
-            print("Não é possível excluir o registro pois ele possui registros dependentes em outra tabela.")
-            return False
-
-        if not self._confirmar("Confirma a exclusão deste Pokémon? (S/N): "):
-            print("Exclusão cancelada.")
-            return False
-
-        try:
-            PostgresQueries(can_write=True).write(
-                "DELETE FROM tb_pokemon WHERE id_pokemon = %s",
-                (id_pokemon,),
-            )
-        except (IntegrityError, DatabaseError) as erro:
-            print(f"Não foi possível excluir o Pokémon: {erro}")
-            return False
-
-        print("Pokémon excluído com sucesso.")
-        return True
+        pokemon = self._montar_pokemon(id_pokemon)
+        nome = pokemon.get_nome_pokemon() if pokemon else id_pokemon
+        # Padrão de exclusão segura: confirma, verifica se o Pokémon é FK em
+        # TB_EVOLUCAO e, se for, oferece excluir as evoluções vinculadas.
+        return excluir_registro_seguro("tb_pokemon", id_pokemon, f"o Pokémon {nome}")
