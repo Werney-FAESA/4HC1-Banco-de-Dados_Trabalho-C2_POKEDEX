@@ -5,11 +5,11 @@
 ## Membro 1: (Entidade: `TB_REGIAO`)
 
 ### Tarefas Faltantes
-- [ ] **Criar `src/model/regiao.py`**:
+- [x] **Criar `src/model/regiao.py`**:
   - Implementar classe `Regiao` com construtor `__init__`, atributos (`id_regiao`, `nome_regiao`, `professor_responsavel`), getters, setters e método `to_string()`.
-- [ ] **Implementar `src/controller/controller_regiao.py`**:
+- [x] **Implementar `src/controller/controller_regiao.py`**:
   - Preencher o arquivo (atualmente com 0 bytes) com as funções de CRUD e checagens.
-- [ ] **Implementar `src/sql`**:
+- [x] **Implementar `src/sql`**:
   - arquivos de relatorios (pode usar o arquivo reports/relatorios.py como referencia)
 
 
