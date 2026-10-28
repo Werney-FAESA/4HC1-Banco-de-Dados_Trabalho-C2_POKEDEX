@@ -1,0 +1,50 @@
+---
+title: Modelo Lógico - pokedex
+---
+
+erDiagram 
+
+    TB_REGIAO {
+        Integer id_regiao PK "not null"
+        String nome_regiao UK "not null"
+        String professor_responsavel "not null"
+    }
+
+    TB_TREINADOR {
+        Integer id_treinador PK "not null"
+        String nome_treinador "not null"
+        Integer idade "not null"
+        Integer id_regiao FK "not null"
+    }
+
+    TB_POKEMON {
+        Integer id_pokemon PK "NOT NULL"
+        String nome_pokemon "NOT NULL"
+        String tipo_primario "NOT NULL"
+        String tipo_secundario "NULL"
+        Integer nivel_base "null"
+        Integer id_regiao FK "NOT NULL"
+    }
+
+    TB_EVOLUCAO {
+        Integer id_evolucao PK "NOT NULL"
+        Integer id_pokemon_base FK "NOT NULL"
+        Integer id_pokemon_evoluido FK "NOT NULL"
+        Integer nivel_evolucao "null"
+        String modo_evolucao "null"
+    }
+
+    TB_BATALHA{
+        Integer id_batalha PK "NOT NULL"
+        Integer id_treinador_1 FK "NOT NULL"
+        Integer id_treinador_2 FK "NOT NULL"
+        date data_batalha "NOT NULL"
+        Integer id_vencedor FK "NOT NULL"
+        String local_batalha "NOT NULL"
+    }
+
+
+    TB_REGIAO ||--o{ TB_POKEMON : possui
+    TB_REGIAO ||--o{ TB_TREINADOR : possui
+    TB_POKEMON ||--o{ TB_EVOLUCAO : evolui
+    TB_TREINADOR ||--o{ TB_BATALHA : participa
