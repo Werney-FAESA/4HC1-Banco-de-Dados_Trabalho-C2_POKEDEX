@@ -7,6 +7,9 @@ class Relatorio:
         with open("src/sql/relatorio_batalhas.sql") as f:
             self.query_relatorio_batalhas = f.read()
 
+        with open("src/sql/relatorio_batalhas_vitorias.sql") as f:
+            self.query_relatorio_batalhas_vitorias = f.read()
+
         with open("src/sql/relatorio_pokemons_evolucao_ult.sql") as f:
             self.query_relatorio_pokemons_evolucao_ult = f.read()
 
@@ -53,6 +56,10 @@ class Relatorio:
         print(postgres.sqlToDataFrame(self.query_relatorio_batalhas))
         input("Pressione Enter para sair do relatório de batalhas...")
 
+    def get_relatorio_batalhas_vitorias(self):
+        postgres = PostgresQueries()
+        print(postgres.sqlToDataFrame(self.query_relatorio_batalhas_vitorias))
+        input("Pressione Enter para sair do relatório de vitórias por treinador...")
 
     def get_relatorio_pokemons_evolucao_ult(self):
         postgres = PostgresQueries()
