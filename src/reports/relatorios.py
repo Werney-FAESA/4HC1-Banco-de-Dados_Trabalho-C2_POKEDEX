@@ -39,8 +39,12 @@ class Relatorio:
             self.query_relatorio_tabelas_quant = f.read()
 
 
+
         with open("src/sql/relatorio_treinadores.sql") as f: 
             self.query_relatorio_treinadores = f.read()
+
+        with open("src/sql/relatorio_treinadores_por_regiao.sql") as f:
+            self.query_relatorio_treinadores_por_regiao = f.read()
 
 
     def get_relatorio_batalhas(self):
@@ -112,11 +116,8 @@ class Relatorio:
         print(postgres.sqlToDataFrame(self.query_relatorio_treinadores))
         input("Pressione Enter para sair do relatório de treinadores...")
 
-
-
-
-
-
-
-
-
+    def get_relatorio_treinadores_por_regiao(self):
+        postgres = PostgresQueries()
+        postgres.connect()
+        print(postgres.sqlToDataFrame(self.query_relatorio_treinadores_por_regiao))
+        input("Pressione Enter para sair do relatório de treinadores por região...")

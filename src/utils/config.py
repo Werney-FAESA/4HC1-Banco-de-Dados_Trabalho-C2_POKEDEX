@@ -17,6 +17,7 @@ MENU_RELATORIOS = """Menu Relatórios
 8 - Relatorio de regiões
 9 - Relatorio de tabelas - quantidade de registros por tabela
 10 - Relatorio de treinadores
+11 - Relatorio de treinadores por região (quantidade, idade média e maior idade)
 0 - Voltar ao menu principal
 """
 
