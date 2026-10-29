@@ -21,12 +21,6 @@ class Controller_Treinador:
          ORDER BY t.id_treinador
     """
 
-    QUERY_LISTAR_REGIOES = """
-        SELECT id_regiao, nome_regiao, professor_responsavel
-          FROM tb_regiao
-         ORDER BY id_regiao
-    """
-
     def _consultar(self, query: str, params=None):
         return PostgresQueries().sqlToDataFrame(query, params)
 
