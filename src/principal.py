@@ -37,6 +37,8 @@ def reports(opcao_relatorio:int=0):
         relatorio.get_relatorio_tabelas_quant()
     elif opcao_relatorio == 10:
         relatorio.get_relatorio_treinadores()
+    elif opcao_relatorio == 11:
+        relatorio.get_relatorio_treinadores_por_regiao()
 
 
 def inserir(opcao_inserir:int=0):
@@ -149,7 +151,6 @@ def run():
 
 if __name__ == "__main__":
     run()
-
 
 
 
