@@ -21,6 +21,12 @@ class Controller_Treinador:
          ORDER BY t.id_treinador
     """
 
+    QUERY_LISTAR_REGIOES = """
+        SELECT id_regiao, nome_regiao, professor_responsavel
+          FROM tb_regiao
+         ORDER BY id_regiao
+    """
+
     def _consultar(self, query: str, params=None):
         return PostgresQueries().sqlToDataFrame(query, params)
 
@@ -296,7 +302,26 @@ class Controller_Treinador:
             print(treinador_atualizado.to_string())
         return treinador_atualizado
 
+    @staticmethod
+    def _confirmar(mensagem: str) -> bool:
+        return input(mensagem).strip().upper() in {"S", "SIM"}
+
+    def _contar_batalhas(self, id_treinador: int) -> int:
+        """Quantidade de batalhas em que o treinador é desafiante, desafiado ou vencedor."""
+        resultado = self._consultar(
+            """
+            SELECT COUNT(*) AS total
+              FROM tb_batalha
+             WHERE id_treinador_1 = %s
+                OR id_treinador_2 = %s
+                OR id_vencedor = %s
+            """,
+            (id_treinador, id_treinador, id_treinador),
+        )
+        return 0 if resultado.empty else int(resultado.iloc[0]["total"])
+
     def excluir_treinador(self) -> bool:
+        """Exclui um treinador com trava de chave estrangeira em TB_BATALHA."""
         print("\n--- Excluir Treinador ---")
         if not self._mostrar_tabela(
             self._consultar(self.QUERY_LISTAR),
@@ -309,8 +334,43 @@ class Controller_Treinador:
             print("Treinador não encontrado.")
             return False
 
-        return excluir_registro_seguro(
-            "tb_treinador",
-            id_treinador,
-            f"o treinador com ID {id_treinador}",
-        )
+        treinador = self._buscar_treinador(PostgresQueries(), id_treinador)
+        nome = treinador.get_nome_treinador() if treinador else id_treinador
+
+        if self.verifica_vinculo_fk(PostgresQueries(), id_treinador):
+            # Trava de FK: o treinador é pai de registros em TB_BATALHA.
+            total = self._contar_batalhas(id_treinador)
+            print(
+                "Não é possível excluir o registro pois ele possui registros "
+                "dependentes em outra tabela."
+            )
+            print(f"O treinador {nome} participa de {total} batalha(s) (TB_BATALHA).")
+            if not self._confirmar(
+                "Deseja excluir primeiro os registros dependentes vinculados? (S/N): "
+            ):
+                print("Exclusão cancelada.")
+                return False
+
+            # Os dois DELETEs vão na mesma chamada, portanto na mesma transação:
+            # se qualquer um falhar, o write() faz rollback e nada é removido.
+            query = (
+                "DELETE FROM tb_batalha "
+                " WHERE id_treinador_1 = %s OR id_treinador_2 = %s OR id_vencedor = %s; "
+                "DELETE FROM tb_treinador WHERE id_treinador = %s"
+            )
+            params = (id_treinador, id_treinador, id_treinador, id_treinador)
+        else:
+            if not self._confirmar(f"Confirma a exclusão do treinador {nome}? (S/N): "):
+                print("Exclusão cancelada.")
+                return False
+            query = "DELETE FROM tb_treinador WHERE id_treinador = %s"
+            params = (id_treinador,)
+
+        try:
+            PostgresQueries(can_write=True).write(query, params)
+        except (IntegrityError, DatabaseError) as erro:
+            print(f"Não foi possível excluir o treinador: {erro}")
+            return False
+
+        print("Treinador excluído com sucesso.")
+        return True
