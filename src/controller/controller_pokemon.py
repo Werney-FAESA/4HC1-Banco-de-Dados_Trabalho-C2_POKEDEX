@@ -12,6 +12,7 @@ from psycopg2 import DatabaseError, IntegrityError
 
 from conexion.conexion import PostgresQueries
 from model.pokemon import Pokemon
+from model.regiao import Regiao
 from utils.exclusao_segura import excluir_registro_seguro
 
 
@@ -115,12 +116,17 @@ class Controller_Pokemon:
         registro = self._buscar_pokemon(id_pokemon)
         if registro is None:
             return None
+        regiao = Regiao(
+            id_regiao=int(registro["id_regiao"]),
+            nome_regiao=str(registro["nome_regiao"]),
+        )
         return Pokemon(
             id_pokemon=int(registro["id_pokemon"]),
             nome_pokemon=registro["nome_pokemon"],
             tipo_primario=registro["tipo_primario"],
             tipo_secundario=registro["tipo_secundario"],
             nivel_base=registro["nivel_base"],
+            regiao=regiao,
         )
 
     def inserir_pokemon(self) -> Optional[Pokemon]:

@@ -15,6 +15,7 @@ class SplashScreen:
 
 
         #nomes dos criadores
+        self.created_by0 = "Bruno Mauro Bayer Laiber"
         self.created_by1 = "Daniel Lima Del'Antonio"
         self.created_by2 = "Gabriel Antônio Galdino dos Santos"
         self.created_by3 = "Issacar Mattos Gutler"
@@ -62,7 +63,8 @@ class SplashScreen:
         #     4 - REGIÕES:                  {str(self.get_total_regioes()).rjust(5)}
         #     5 - TREINADORES:              {str(self.get_total_treinadores()).rjust(5)}
         #
-        # CRIADO POR: {self.created_by1}
+        # CRIADO POR: {self.created_by0}
+        #             {self.created_by1}
         #             {self.created_by2}
         #             {self.created_by3}
         #             {self.created_by4}

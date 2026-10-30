@@ -16,7 +16,7 @@ ctrl_regiao = Controller_Regiao()
 ctrl_treinador = Controller_Treinador()
 
 
-def reports(opcao_relatorio:int=0):
+def reports(opcao_relatorio: int = 0):
     if opcao_relatorio == 1:
         relatorio.get_relatorio_batalhas()
     elif opcao_relatorio == 2:
@@ -39,9 +39,11 @@ def reports(opcao_relatorio:int=0):
         relatorio.get_relatorio_treinadores()
     elif opcao_relatorio == 11:
         relatorio.get_relatorio_treinadores_por_regiao()
+    elif opcao_relatorio == 12:
+        relatorio.get_relatorio_batalhas_vitorias()
 
 
-def inserir(opcao_inserir:int=0):
+def inserir(opcao_inserir: int = 0):
     if opcao_inserir == 1:
         novo_batalha = ctrl_batalha.inserir_batalha()
     elif opcao_inserir == 2:
@@ -54,41 +56,35 @@ def inserir(opcao_inserir:int=0):
         novo_treinador = ctrl_treinador.inserir_treinador()
 
 
-
-def atualizar(opcao_atualizar:int=0):
+def atualizar(opcao_atualizar: int = 0):
     if opcao_atualizar == 1:
-        relatorio.get_relatorio_batalhas()
         batalha_atualizado = ctrl_batalha.atualizar_batalha()
     elif opcao_atualizar == 2:
-        relatorio.get_relatorio_pokemons_evolucao_ult()
         evolucao_atualizado = ctrl_evolucao.atualizar_evolucao()
     elif opcao_atualizar == 3:
-        relatorio.get_relatorio_pokemons()
         pokemon_atualizado = ctrl_pokemon.atualizar_pokemon()
     elif opcao_atualizar == 4:
-        relatorio.get_relatorio_regiao()
         regiao_atualizado = ctrl_regiao.atualizar_regiao()
     elif opcao_atualizar == 5:
-        relatorio.get_relatorio_treinadores()
         treinador_atualizado = ctrl_treinador.atualizar_treinador()
 
 
-def remover(opcao_excluir:int=0):
+def remover(opcao_excluir: int = 0):
     if opcao_excluir == 1:
-        relatorio.get_relatorio_batalhas()
         ctrl_batalha.excluir_batalha()
     elif opcao_excluir == 2:
-        relatorio.get_relatorio_pokemons_evolucao_ult()
         ctrl_evolucao.excluir_evolucao()
     elif opcao_excluir == 3:
-        relatorio.get_relatorio_pokemons()
         ctrl_pokemon.excluir_pokemon()
     elif opcao_excluir == 4:
-        relatorio.get_relatorio_regiao()
         ctrl_regiao.excluir_regiao()
     elif opcao_excluir == 5:
-        relatorio.get_relatorio_treinadores()
         ctrl_treinador.excluir_treinador()
+
+
+def _continuar(acao: str) -> bool:
+    resposta = input(f"\nDeseja {acao} mais algum registro? (S/N): ").strip().upper()
+    return resposta in {"S", "SIM"}
 
 
 def run():
@@ -97,49 +93,83 @@ def run():
 
     while True:
         print(config.MENU_PRINCIPAL)
-        opcao = input("Escolha uma opção: ")
+        opcao = input("Escolha uma opção: ").strip()
         config.clear_console(1)
 
-        if opcao == "1": # relatorios
+        if opcao == "1":  # relatorios
             print(config.MENU_RELATORIOS)
-            opcao_relatorio = int(input("Escolha uma opção: "))
+            try:
+                opcao_relatorio = int(input("Escolha uma opção: ").strip())
+            except ValueError:
+                print("Opção inválida.")
+                config.clear_console(1)
+                continue
             config.clear_console(1)
 
             reports(opcao_relatorio)
             config.clear_console(1)
 
-        elif opcao == "2": # inserir registros
-            print(config.MENU_ENTIDADES)
-            opcao_inserir = int(input("Escolha uma opção: "))
-            config.clear_console(1)
+        elif opcao == "2":  # inserir registros
+            while True:
+                print(config.MENU_ENTIDADES)
+                try:
+                    opcao_inserir = int(input("Escolha uma opção: ").strip())
+                except ValueError:
+                    print("Opção inválida.")
+                    config.clear_console(1)
+                    break
+                config.clear_console(1)
 
-            inserir(opcao_inserir = opcao_inserir)
-            config.clear_console(1)
+                inserir(opcao_inserir=opcao_inserir)
+                config.clear_console(1)
 
-            print(tela_inicial.get_updated_screen())
-            config.clear_console(1)
-
-
-        elif opcao == "3": # atualizar registros
-            print(config.MENU_ENTIDADES)
-            opcao_atualizar = int(input("Escolha uma opção: "))
-            config.clear_console(1)
-
-            atualizar(opcao_atualizar = opcao_atualizar)
-            config.clear_console(1)
-
-        elif opcao == "4": # remover registros
-            print(config.MENU_ENTIDADES)
-            opcao_excluir = int(input("Escolha uma opção: "))
-            config.clear_console(1)
-
-            remover(opcao_excluir = opcao_excluir)
-            config.clear_console(1)
+                if opcao_inserir == 2 or not _continuar("inserir"):
+                    break
 
             print(tela_inicial.get_updated_screen())
             config.clear_console(1)
 
-        elif opcao == "5": # sair
+        elif opcao == "3":  # atualizar registros
+            while True:
+                print(config.MENU_ENTIDADES)
+                try:
+                    opcao_atualizar = int(input("Escolha uma opção: ").strip())
+                except ValueError:
+                    print("Opção inválida.")
+                    config.clear_console(1)
+                    break
+                config.clear_console(1)
+
+                atualizar(opcao_atualizar=opcao_atualizar)
+                config.clear_console(1)
+
+                if opcao_atualizar == 2 or not _continuar("atualizar"):
+                    break
+
+            print(tela_inicial.get_updated_screen())
+            config.clear_console(1)
+
+        elif opcao == "4":  # remover registros
+            while True:
+                print(config.MENU_ENTIDADES)
+                try:
+                    opcao_excluir = int(input("Escolha uma opção: ").strip())
+                except ValueError:
+                    print("Opção inválida.")
+                    config.clear_console(1)
+                    break
+                config.clear_console(1)
+
+                remover(opcao_excluir=opcao_excluir)
+                config.clear_console(1)
+
+                if opcao_excluir == 2 or not _continuar("excluir"):
+                    break
+
+            print(tela_inicial.get_updated_screen())
+            config.clear_console(1)
+
+        elif opcao == "5":  # sair
             print(tela_inicial.get_updated_screen())
             config.clear_console()
             print("obrigado por utilizar a POKEDEX!")
@@ -147,63 +177,8 @@ def run():
 
         else:
             print("Opção inválida.")
-            exit(1)
+            config.clear_console(1)
+
 
 if __name__ == "__main__":
     run()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -18,6 +18,7 @@ MENU_RELATORIOS = """Menu Relatórios
 9 - Relatorio de tabelas - quantidade de registros por tabela
 10 - Relatorio de treinadores
 11 - Relatorio de treinadores por região (quantidade, idade média e maior idade)
+12 - Relatorio de vitórias por treinador
 0 - Voltar ao menu principal
 """
 
@@ -36,4 +37,4 @@ def clear_console(wait_time: int = 3):
     from time import sleep
 
     sleep(wait_time)
-    os.system('clear')
+    os.system('cls' if os.name == 'nt' else 'clear')

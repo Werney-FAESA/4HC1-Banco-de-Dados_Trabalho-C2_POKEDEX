@@ -1,78 +1,113 @@
 # 4HC1-Banco-de-Dados_Trabalho-C2_POKEDEX
 
-## Conexao com o PostgreSQL
+Sistema de gerenciamento de Pokédex via terminal (CLI) integrado ao banco de dados **PostgreSQL** via Docker, utilizando `psycopg2` e `pandas` (sem ORM).
 
-O projeto usa `psycopg2` diretamente, sem ORM. O banco roda pelo Docker Compose e
-fica disponivel em `localhost:5432`.
+---
 
-### Preparar o ambiente
+## 🎥 Vídeo de Demonstração (YouTube)
 
+- **Link do vídeo:** *([(https://youtu.be/7AE_30qgB7E)](https://youtu.be/7AE_30qgB7E))*
+
+---
+
+## 🚀 Passo a Passo para Executar o Projeto
+
+### 1. Preparar o Ambiente e Instalar Dependências
+
+**No Linux / macOS:**
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-python -m pip install -r requeriments.txt
+python -m pip install -r requirements.txt
+```
+
+**No Windows (PowerShell):**
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+```
+
+---
+
+### 2. Iniciar o Banco de Dados (PostgreSQL via Docker)
+
+Suba o container do PostgreSQL em segundo plano:
+
+```bash
 sudo docker compose up -d
 sudo docker compose ps
 ```
+*(No Windows com Docker Desktop, não é necessário usar `sudo`: `docker compose up -d`)*
 
-O servico `db` deve aparecer como `running` ou `Up`. O comando `sudo` e necessario
-neste ambiente para acessar a API do Docker.
+O serviço `db` (`pokedex_db`) será iniciado na porta `5432` e executará automaticamente os scripts de criação de tabelas (`sql/create_tables.sql`) e carga inicial de dados (`sql/inserts_iniciais.sql`).
 
-### Validar a conexao
+---
 
-Execute uma consulta minima usando a classe da aplicacao:
+### 3. Executar a Aplicação no Terminal
+
+A partir da raiz do projeto, execute:
+
+**No Linux / macOS:**
+```bash
+python3 src/principal.py
+```
+
+**No Windows:**
+```powershell
+python src/principal.py
+```
+
+---
+
+## 🔍 Validação Rápida da Conexão (Opcional)
+
+Para testar uma consulta diretamente no banco `pokedex`:
 
 ```bash
-python -c "from src.conexion.conexion import PostgresQueries; resultado = PostgresQueries().sqlToDataFrame('SELECT 1 AS conectado'); print(resultado.to_string(index=False))"
+python3 -c "from src.conexion.conexion import PostgresQueries; print(PostgresQueries().sqlToDataFrame('SELECT * FROM tb_pokemon LIMIT 5').to_string(index=False))"
 ```
 
-O resultado esperado e:
+As configurações padrão (`localhost:5432`, banco `pokedex`, usuário `postgres`, senha `password123`) também podem ser sobrescritas pelas variáveis de ambiente `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER` e `POSTGRES_PASSWORD`.
 
-```text
- conectado
-	 1
-```
+---
 
-Para testar uma tabela do banco, execute:
+## 🛠️ Exemplos de Uso da Camada de Conexão
 
-```bash
-python -c "from src.conexion.conexion import PostgresQueries; print(PostgresQueries().sqlToDataFrame('SELECT * FROM pokemon LIMIT 5'))"
-```
-
-As configuracoes podem ser sobrescritas pelas variaveis `POSTGRES_HOST`,
-`POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER` e `POSTGRES_PASSWORD`.
-
-### Como usar
-
-Consultas recebem parametros separados do SQL. O `psycopg2` faz o escaping correto;
-nao concatene valores diretamente na string da consulta.
+Consultas recebem parâmetros separados do SQL (`%s`), garantindo segurança contra SQL Injection:
 
 ```python
 from src.conexion.conexion import PostgresQueries
 
 db = PostgresQueries()
 try:
-	resultado = db.sqlToDataFrame(
-		"SELECT * FROM pokemon WHERE nome = %s",
-		("Pikachu",),
-	)
+    resultado = db.sqlToDataFrame(
+        "SELECT * FROM tb_pokemon WHERE nome_pokemon = %s",
+        ("Pikachu",),
+    )
 finally:
-	db.close()
+    db.close()
 ```
 
-Para escrever, abra explicitamente uma conexao com permissao de escrita:
+Para operações de escrita (`INSERT`, `UPDATE`, `DELETE`), habilite `can_write=True`:
 
 ```python
 db = PostgresQueries(can_write=True)
 try:
-	db.write(
-		"UPDATE pokemon SET altura = %s WHERE id_pokemon = %s",
-		(0.4, 25),
-	)
+    db.write(
+        "UPDATE tb_pokemon SET nivel_base = %s WHERE id_pokemon = %s",
+        (15, 25),
+    )
 finally:
-	db.close()
+    db.close()
 ```
 
-Em caso de falha de escrita, a transacao recebe `rollback`. Consultas de leitura
-retornam um `DataFrame` vazio quando ocorre um erro de banco, enquanto erros de
-integridade e conexao sao relancados para que a camada superior possa trata-los.
+---
+
+### Encerrar o Banco de Dados
+
+Quando terminar de utilizar a aplicação:
+
+```bash
+docker compose down
+```

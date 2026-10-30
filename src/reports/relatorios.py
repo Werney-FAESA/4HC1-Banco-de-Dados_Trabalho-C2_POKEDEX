@@ -1,53 +1,32 @@
+import os
 from conexion.postgres_queries import PostgresQueries
 
 class Relatorio:
     def __init__(self):
+        base_sql_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "sql")
+
+        def _read_sql(filename: str) -> str:
+            path = f"src/sql/{filename}"
+            if not os.path.exists(path):
+                path = f"sql/{filename}"
+            if not os.path.exists(path):
+                path = os.path.join(base_sql_dir, filename)
+            with open(path, "r", encoding="utf-8") as f:
+                return f.read()
 
         # carrega a query do relatório de batalhas a partir do arquivo SQL
-        with open("src/sql/relatorio_batalhas.sql") as f:
-            self.query_relatorio_batalhas = f.read()
-
-        with open("src/sql/relatorio_batalhas_vitorias.sql") as f:
-            self.query_relatorio_batalhas_vitorias = f.read()
-
-        with open("src/sql/relatorio_pokemons_evolucao_ult.sql") as f:
-            self.query_relatorio_pokemons_evolucao_ult = f.read()
-
-
-        with open("src/sql/relatorio_pokemons_evolucao.sql") as f:
-            self.query_relatorio_pokemons_evolucao = f.read()
-
-
-        with open("src/sql/relatorio_pokemons_quant_regiao.sql") as f:
-            self.query_relatorio_pokemons_quant_regiao = f.read()   
-
-
-        with open("src/sql/relatorio_pokemons_quant_tipo.sql") as f:
-            self.query_relatorio_pokemons_quant_tipo = f.read()
-
-
-        with open("src/sql/relatorio_pokemons.sql") as f:
-            self.query_relatorio_pokemons = f.read()
-
-
-
-        with open("src/sql/relatorio_regiao_quant_pokemons.sql") as f:
-            self.query_relatorio_regiao_quant_pokemonms = f.read()
-
-
-        with open("src/sql/relatorio_regiao.sql") as f:
-            self.query_relatorio_regiao = f.read()
-
-        with open("src/sql/relatorio_tabelas_quant.sql") as f:
-            self.query_relatorio_tabelas_quant = f.read()
-
-
-
-        with open("src/sql/relatorio_treinadores.sql") as f: 
-            self.query_relatorio_treinadores = f.read()
-
-        with open("src/sql/relatorio_treinadores_por_regiao.sql") as f:
-            self.query_relatorio_treinadores_por_regiao = f.read()
+        self.query_relatorio_batalhas = _read_sql("relatorio_batalhas.sql")
+        self.query_relatorio_batalhas_vitorias = _read_sql("relatorio_batalhas_vitorias.sql")
+        self.query_relatorio_pokemons_evolucao_ult = _read_sql("relatorio_pokemons_evolucao_ult.sql")
+        self.query_relatorio_pokemons_evolucao = _read_sql("relatorio_pokemons_evolucao.sql")
+        self.query_relatorio_pokemons_quant_regiao = _read_sql("relatorio_pokemons_quant_regiao.sql")
+        self.query_relatorio_pokemons_quant_tipo = _read_sql("relatorio_pokemons_quant_tipo.sql")
+        self.query_relatorio_pokemons = _read_sql("relatorio_pokemons.sql")
+        self.query_relatorio_regiao_quant_pokemonms = _read_sql("relatorio_regiao_quant_pokemons.sql")
+        self.query_relatorio_regiao = _read_sql("relatorio_regiao.sql")
+        self.query_relatorio_tabelas_quant = _read_sql("relatorio_tabelas_quant.sql")
+        self.query_relatorio_treinadores = _read_sql("relatorio_treinadores.sql")
+        self.query_relatorio_treinadores_por_regiao = _read_sql("relatorio_treinadores_por_regiao.sql")
 
 
     def get_relatorio_batalhas(self):
@@ -58,6 +37,7 @@ class Relatorio:
 
     def get_relatorio_batalhas_vitorias(self):
         postgres = PostgresQueries()
+        postgres.connect()
         print(postgres.sqlToDataFrame(self.query_relatorio_batalhas_vitorias))
         input("Pressione Enter para sair do relatório de vitórias por treinador...")
 

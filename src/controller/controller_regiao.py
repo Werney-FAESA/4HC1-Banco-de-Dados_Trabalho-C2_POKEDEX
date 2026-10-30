@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from typing import Optional
 
-from src.conexion.conexion import PostgresQueries
-from src.model.regiao import Regiao
+from conexion.conexion import PostgresQueries
+from model.regiao import Regiao
+from utils.exclusao_segura import excluir_registro_seguro
 
 
 class Controller_Regiao:
@@ -97,8 +98,8 @@ class Controller_Regiao:
         print(regiao_atualizada.to_string())
         return regiao_atualizada
 
-    def excluir_regiao(self) -> None:
-        """Exclui uma região sem remover registros da tabela de Pokémon."""
+    def excluir_regiao(self) -> bool:
+        """Exclui uma região utilizando o padrão de exclusão segura (trava de FK)."""
         postgres = PostgresQueries(can_write=True)
         self.listar_regioes(postgres)
 
@@ -106,35 +107,15 @@ class Controller_Regiao:
             id_regiao = int(input("\nDigite o ID da região para excluir: "))
         except ValueError:
             print("[ERRO] O ID deve ser um número inteiro.")
-            return
+            return False
 
         if not self.verifica_existencia(postgres, id_regiao):
             print(f"\n[AVISO] A região {id_regiao} não existe.")
-            return
+            return False
 
-        if self.verifica_vinculo_fk(postgres, id_regiao):
-            print(
-                "\n[AVISO] Não é possível excluir o registro pois ele possui "
-                "registros dependentes em outra tabela."
-            )
-            return
-
-        confirmacao = input(
-            f"Tem certeza que deseja excluir a região {id_regiao}? (S/N): "
-        ).strip().upper()
-        if confirmacao != "S":
-            print("\nOperação cancelada.")
-            return
-
-        regiao_excluida = self._buscar_regiao(postgres, id_regiao)
-        postgres.write(
-            f"DELETE FROM {self.TABLE_NAME} WHERE id_regiao = %s",
-            (id_regiao,),
-        )
-
-        print("\n[SUCESSO] Região removida com sucesso:")
-        if regiao_excluida is not None:
-            print(regiao_excluida.to_string())
+        regiao = self._buscar_regiao(postgres, id_regiao)
+        nome = regiao.get_nome_regiao() if regiao else id_regiao
+        return excluir_registro_seguro("tb_regiao", id_regiao, f"a região {nome}")
 
     def verifica_existencia(
         self, postgres: PostgresQueries, id_regiao: int
